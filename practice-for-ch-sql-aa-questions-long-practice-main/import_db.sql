@@ -62,6 +62,7 @@ INSERT INTO
     question_follows(user_id, question_id)
 VALUES
     ((SELECT id FROM users WHERE fname = 'Shannon'), (SELECT id FROM questions WHERE title = 'cat')),
+    ((SELECT id FROM users WHERE fname = 'David'), (SELECT id FROM questions WHERE title = 'cat')),
     ((SELECT id FROM users WHERE fname = 'David'), (SELECT id FROM questions WHERE title = 'career'));
 
 INSERT INTO 

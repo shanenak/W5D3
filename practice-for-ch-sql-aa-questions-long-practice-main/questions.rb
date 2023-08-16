@@ -79,7 +79,9 @@ class Question
         SQL
         data.map{|datum| Question.new(datum)}
     end
-
+    def self.most_followed(n)
+        QuestionFollow.most_followed_questions(n)
+    end
     def initialize(options) #array of all attributes
         @id = options['id']
         @title = options['title']
@@ -182,6 +184,19 @@ class QuestionFollow
             JOIN question_follows
             ON question_follows.question_id = questions.id
             WHERE question_follows.user_id = ?;
+        SQL
+        data.map{|datum| Question.new(datum)}
+    end
+
+    def self.most_followed_questions(n)
+        data = QuestionsDBConnection.instance.execute(<<-SQL, n)
+            SELECT questions.id, questions.title, questions.body, questions.user_id
+            FROM questions
+            JOIN question_follows
+            ON question_follows.question_id = questions.id
+            GROUP BY questions.id
+            ORDER BY COUNT(questions.id) DESC
+            LIMIT ?;
         SQL
         data.map{|datum| Question.new(datum)}
     end
