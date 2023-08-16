@@ -19,7 +19,7 @@ class User
             FROM users
             WHERE id = ?;
         SQL
-        data.map{|datum| User.new(datum)}
+        data.each{|datum| return User.new(datum)}
     end
 
     def self.find_by_name(fname, lname)
@@ -29,13 +29,21 @@ class User
             WHERE fname = ?
             AND lname = ?;
         SQL
-        data.map{|datum| User.new(datum)}
+        data.each{|datum| return User.new(datum)}
     end
 
     def initialize(options) #array of all attributes
         @id = options['id']
         @fname = options['fname']
         @lname = options['lname']
+    end
+
+    def authored_questions
+        Question.find_by_author_id(self.id)
+    end
+
+    def authored_replies
+        Reply.find_by_user_id(self.id)
     end
 end
 
@@ -47,7 +55,7 @@ class Question
             FROM questions
             WHERE id = ?;
         SQL
-        data.map{|datum| Question.new(datum)}
+        data.each{|datum| return Question.new(datum)}
     end
 
     def self.find_by_title(title)
@@ -56,7 +64,7 @@ class Question
             FROM questions
             WHERE title = ?;
         SQL
-        data.map{|datum| Question.new(datum)}
+        data.each{|datum| return Question.new(datum)}
     end
 
     def self.find_by_author_id(author_id)

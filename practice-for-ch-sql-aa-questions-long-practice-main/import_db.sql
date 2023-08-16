@@ -1,4 +1,9 @@
 PRAGMA foreign_keys = ON;
+DROP TABLE question_likes;
+DROP TABLE replies;
+DROP TABLE question_follows;
+DROP TABLE questions;
+DROP TABLE users;
 
 CREATE TABLE users (
     id INTEGER PRIMARY KEY,
@@ -63,7 +68,7 @@ INSERT INTO
     replies(question_id, reference_id, user_id, body)
 VALUES
     ((SELECT id FROM questions WHERE title = 'career'), NULL,(SELECT id FROM users WHERE fname = 'David'), 'Join App Academy!'),
-    ((SELECT id FROM questions WHERE title = 'career'),(SELECT id FROM replies WHERE body = 'Join App Academy!'),(SELECT id FROM users WHERE fname = 'Shannon'), 'Kiss up XD');
+    ((SELECT id FROM questions WHERE title = 'career'),(1),(SELECT id FROM users WHERE fname = 'Shannon'), 'Kiss up XD');
 
 INSERT INTO 
     question_likes(user_id, question_id)
