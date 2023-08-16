@@ -82,6 +82,14 @@ class Question
         @body = options['body']
         @user_id = options['user_id']
     end
+
+    def author
+        User.find_by_id(self.user_id)
+    end
+
+    def replies
+        Reply.find_by_question_id(self.id)
+    end
 end
 
 class Reply
@@ -92,6 +100,22 @@ class Reply
         @reference_id = options['reference_id']
         @user_id = options['user_id']
         @body = options['body']
+    end
+    def self.find_by_id(reference_id)
+        data = QuestionsDBConnection.instance.execute(<<-SQL, reference_id)
+            SELECT * 
+            FROM replies
+            WHERE id = ?;
+        SQL
+        data.map {|datum| Reply.new(datum)}
+    end
+    def self.find_by_reference_id(id)
+        data = QuestionsDBConnection.instance.execute(<<-SQL, id)
+            SELECT * 
+            FROM replies
+            WHERE reference_id = ?;
+        SQL
+        data.map {|datum| Reply.new(datum)}
     end
     def self.find_by_user_id(user_id)
         data = QuestionsDBConnection.instance.execute(<<-SQL, user_id)
@@ -108,5 +132,17 @@ class Reply
             WHERE question_id = ?;
         SQL
         data.map {|datum| Reply.new(datum)}
+    end
+    def author
+        User.find_by_id(self.user_id)
+    end
+    def question
+        Question.find_by_id(self.question_id)
+    end
+    def parent_reply
+        Reply.find_by_id(self.reference_id)
+    end
+    def child_replies
+        Reply.find_by_reference_id(self.id)
     end
 end
